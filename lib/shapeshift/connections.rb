@@ -36,8 +36,10 @@ module Shapeshift
           body = resp.parsed_response
 
           # Received marketplace error from Shapeshift
-          if body.is_a?(Hash) && body.has_key?("error")
+          if    body.is_a?(Hash) && body.has_key?("error")
             raise ShapeshiftError.new( body["error"] )
+          elsif body.is_a?(Hash) && body.has_key?("success")
+            return body["success"]
           else
             return body
           end

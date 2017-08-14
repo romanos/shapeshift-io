@@ -5,7 +5,8 @@ module Shapeshift
 
     include Shapeshift::Connection
     include Shapeshift::MarketClient
-
+    include Shapeshift::TransactionClient
+    
     def initialize( headers = {} )
       @headers = {}
     end
