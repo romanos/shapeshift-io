@@ -14,14 +14,37 @@ module Shapeshift
     def get( url, options = {} )
       headers = merge_headers( options[:headers] || {} )
       resp = self.class.get( url, { headers: headers } )
+      return parse( resp )
+    rescue ShapeshiftError => e 
+      puts e.message
     end
 
     # Make an HTTP POST request
     def post( url, options = {} )
       headers = merge_headers( options[:headers] || {} )
       body = options[:body]
-      resp = self.class.get( url, { body: body.to_json, headers: headers } )
+      resp = self.class.post( url, { body: body.to_json, headers: headers } )
+      return parse( resp )
+    rescue ShapeshiftError => e 
+      puts e.message
     end
+
+    private 
+
+      def parse( resp )
+        if resp.code == 200
+          body = resp.parsed_response
+
+          # Received marketplace error from Shapeshift
+          if body.is_a?(Hash) && body.has_key?("error")
+            raise ShapeshiftError.new( body["error"] )
+          else
+            return body
+          end
+        else          
+          raise HTTPError
+        end
+      end
 
   end
 end

@@ -1,6 +1,7 @@
 module Shapeshift
   
-  class HTTPError < StandardError; end
-  class NoDemandError < StandardError; end
+  class ShapeshiftError   < StandardError;    end
+  class HTTPError         < ShapeshiftError;  end
+  class NoDemandError     < ShapeshiftError;  end
 
 end
